@@ -65,7 +65,7 @@ def register_authority(data: AuthorityRegister, db: Session = Depends(get_db)):
     return {"message": "Authority registered", "user_id": str(new_user.user_id)}
 
 # ----------------------
-# Login (both)
+# Login (both)  (working)
 # ----------------------
 @router.post("/login")
 def login_user(data: UserLogin, db: Session = Depends(get_db)):
