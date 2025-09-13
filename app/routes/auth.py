@@ -10,9 +10,9 @@ from ..schemas import TouristRegister, AuthorityRegister, UserLogin
 router = APIRouter()
 
 # ----------------------
-# Tourist Register
+# Tourist Register  (working)
 # ----------------------
-@router.post("/register/tourist")
+@router.post("/register/tourist") 
 def register_tourist(data: TouristRegister, db: Session = Depends(get_db)):
     if db.query(User).filter(User.email == data.email).first():
         raise HTTPException(status_code=400, detail="Email already exists")
@@ -40,7 +40,7 @@ def register_tourist(data: TouristRegister, db: Session = Depends(get_db)):
     return {"message": "Tourist registered", "user_id": str(new_user.user_id)}
 
 # ----------------------
-# Authority Register
+# Authority Register   (working)
 # ----------------------
 @router.post("/register/authority")
 def register_authority(data: AuthorityRegister, db: Session = Depends(get_db)):
