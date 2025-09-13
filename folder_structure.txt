@@ -1,0 +1,21 @@
+smart-tourist-system/
+│
+├── backend/
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py               # FastAPI app instance
+│   │   ├── database.py           # SQLAlchemy session and engine
+│   │   ├── models.py             # SQLAlchemy ORM models
+│   │   ├── schemas.py            # Pydantic request/response schemas
+│   │   ├── routes/
+│   │   │   ├── __init__.py
+│   │   │   ├── auth.py           # registration + login routes
+│   │   │   ├── tourist.py        # tourist-specific routes (location, alerts)
+│   │   │   └── authority.py      # authority-specific routes (view clusters, alerts)
+│   │   └── utils.py              # helper functions (password hashing, etc.)
+│   │
+│   ├── requirements.txt
+│   └── alembic/                  # optional if you want migrations
+│
+└── frontend/
+    └── ...                       # your React Native project
