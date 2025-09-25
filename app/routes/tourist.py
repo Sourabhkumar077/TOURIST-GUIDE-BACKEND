@@ -6,7 +6,7 @@ import math
 
 from ..database import get_db
 from ..models import TouristProfile, Incident, Alert, User
-from ..schemas import IncidentCreate, IncidentResponse, AlertResponse
+from ..schemas import IncidentCreate, IncidentResponse, AlertResponse, SOSRequest, RiskZone
 
 router = APIRouter()
 
@@ -161,3 +161,50 @@ def update_safety_score(tourist_id: str, score: int, db: Session = Depends(get_d
     db.commit()
     
     return {"message": "Safety score updated", "new_score": tourist.safety_score}
+
+# ----------------------
+# SOS: Create high-priority incident and notify nearby tourists
+# ----------------------
+@router.post("/sos")
+def send_sos(tourist_id: str, data: SOSRequest, db: Session = Depends(get_db)):
+    tourist = db.query(TouristProfile).filter(TouristProfile.tourist_id == tourist_id).first()
+    if not tourist:
+        raise HTTPException(status_code=404, detail="Tourist not found")
+
+    incident = Incident(
+        tourist_id=tourist_id,
+        title="SOS Alert",
+        description=data.message or "Emergency SOS triggered by tourist",
+        category="Emergency",
+        latitude=data.latitude,
+        longitude=data.longitude,
+        priority="Critical"
+    )
+    db.add(incident)
+    db.flush()
+
+    # Naive broadcast to other tourists as alert (placeholder for real proximity logic)
+    tourists = db.query(TouristProfile).all()
+    for t in tourists:
+        if str(t.tourist_id) == str(tourist_id):
+            continue
+        alert = Alert(
+            incident_id=incident.incident_id,
+            tourist_id=t.tourist_id,
+            distance_km="~1km"
+        )
+        db.add(alert)
+
+    db.commit()
+    return {"message": "SOS created", "incident_id": str(incident.incident_id)}
+
+# ----------------------
+# Risk Zones: return static zones for MVP
+# ----------------------
+@router.get("/risk-zones", response_model=list[RiskZone])
+def get_risk_zones():
+    return [
+        RiskZone(id="rz-1", name="Old Fort Restricted Area", latitude=28.6562, longitude=77.2410, radius_meters=300, risk_level="Restricted"),
+        RiskZone(id="rz-2", name="Night Theft Hotspot", latitude=28.6139, longitude=77.2090, radius_meters=500, risk_level="High"),
+        RiskZone(id="rz-3", name="Riverbank Slippery Zone", latitude=28.7041, longitude=77.1025, radius_meters=400, risk_level="Medium"),
+    ]

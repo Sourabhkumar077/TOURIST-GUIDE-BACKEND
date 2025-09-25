@@ -78,6 +78,25 @@ class AlertResponse(BaseModel):
         from_attributes = True
 
 # ----------------------
+# SOS
+# ----------------------
+class SOSRequest(BaseModel):
+    message: Optional[str] = None
+    latitude: Optional[str] = None
+    longitude: Optional[str] = None
+
+# ----------------------
+# Risk Zones
+# ----------------------
+class RiskZone(BaseModel):
+    id: str
+    name: str
+    latitude: float
+    longitude: float
+    radius_meters: int
+    risk_level: str  # e.g., 'High', 'Medium', 'Restricted'
+
+# ----------------------
 # User Response
 # ----------------------
 class UserResponse(BaseModel):
