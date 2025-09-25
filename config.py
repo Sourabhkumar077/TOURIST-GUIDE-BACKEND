@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Database Configuration
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:Sourabh%23123@localhost:5432/saarthi_db")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:Sourabh2025Secure@localhost:5432/saarthi_db")
 
 # API Configuration
 API_V1_STR = "/api"
