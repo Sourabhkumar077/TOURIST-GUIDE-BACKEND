@@ -46,3 +46,33 @@ class AuthorityProfile(Base):
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
 
     user = relationship("User", back_populates="authority_profile")
+
+
+class Incident(Base):
+    __tablename__ = "incidents"
+    incident_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tourist_id = Column(UUID(as_uuid=True), ForeignKey("tourist_profiles.tourist_id", ondelete="CASCADE"), nullable=False)
+    title = Column(String(200), nullable=False)
+    description = Column(Text, nullable=False)
+    category = Column(String(50), nullable=False)  # 'Theft', 'Harassment', 'Medical', 'Accident'
+    latitude = Column(String(50))
+    longitude = Column(String(50))
+    status = Column(String(20), default="Active")  # 'Active', 'Resolved'
+    priority = Column(String(20), default="Medium")  # 'Low', 'Medium', 'High', 'Critical'
+    created_at = Column(TIMESTAMP, default=datetime.utcnow)
+    updated_at = Column(TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    tourist = relationship("TouristProfile", backref="incidents")
+
+
+class Alert(Base):
+    __tablename__ = "alerts"
+    alert_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    incident_id = Column(UUID(as_uuid=True), ForeignKey("incidents.incident_id", ondelete="CASCADE"), nullable=False)
+    tourist_id = Column(UUID(as_uuid=True), ForeignKey("tourist_profiles.tourist_id", ondelete="CASCADE"), nullable=False)
+    distance_km = Column(String(20))
+    is_read = Column(String(10), default="false")
+    created_at = Column(TIMESTAMP, default=datetime.utcnow)
+
+    incident = relationship("Incident", backref="alerts")
+    tourist = relationship("TouristProfile", backref="alerts")

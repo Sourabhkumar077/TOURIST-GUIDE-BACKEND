@@ -1,163 +1,184 @@
-🛰️ Smart Tourist Safety Monitoring & Incident Response System - Backend
-
-A FastAPI-based backend for monitoring tourist safety, managing incident reports, and enabling real-time emergency response using AI, Blockchain (planned), and Geo-Fencing (planned) integrations.
-
-🚀 Features
-
-Authentication
-
-JWT-based authentication (login, token validation)
-
-Role-based access (Tourist / Responder / Admin)
-
-Tourist Management
-
-Register tourists with UUID Digital Tourist ID
-
-Profile fetch, update, delete
-
-Emergency contacts & itinerary storage
-
-Incident Management
-
-Report incidents (linked to tourists)
-
-Fetch tourist-specific incidents
-
-Update incident status (open → resolved)
-
-System
-
-Health check & root endpoints
-
-Logging middleware with timing
-
-Global error handling with JSON responses
-
-🏗️ Tech Stack
-
-Backend: FastAPI
-
-Database: PostgreSQL (default) / SQLite (dev mode)
-
-ORM: SQLAlchemy + Pydantic
-
-Auth: JWT (PyJWT, OAuth2PasswordBearer)
-
-Migrations: Alembic (recommended)
-
-Logging: Built-in logging module
-
-Deployment Ready: .env config support, CORS enabled
-
-📂 Project Structure
-backend/
-├── app/
-│   ├── main.py              # App initialization
-│   ├── config.py            # Environment settings
-│   ├── database.py          # DB connection
-│   ├── models.py            # SQLAlchemy models
-│   ├── schemas.py           # Pydantic schemas
-│   ├── crud.py              # CRUD operations
-│   ├── routes/
-│   │   ├── auth.py          # JWT Auth endpoints
-│   │   ├── tourist.py       # Tourist endpoints
-│   │   ├── incident.py      # Incident endpoints
-│   ├── __init__.py
-│
-├── requirements.txt         # Dependencies
-├── .env                     # Env variables template
-└── README.md
-
-⚙️ Setup & Installation
-1️⃣ Clone Repository
-git clone https://github.com/your-org/tourist-safety-backend.git
-cd tourist-safety-backend/backend
-
-2️⃣ Create Virtual Environment
-python -m venv venv
-source venv/bin/activate   # Linux / Mac
-venv\Scripts\activate      # Windows
-
-3️⃣ Install Dependencies
-pip install -r requirements.txt
-
-4️⃣ Configure Environment
-
-Create .env file (copy .env.example if exists):
-
-DATABASE_URL=postgresql://user:password@localhost:5432/tourist_safety
-JWT_SECRET_KEY=your_secret_key
-JWT_ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=60
-CORS_ORIGINS=http://localhost:3000
-
-5️⃣ Run Application
-uvicorn app.main:app --reload
-
-
-Visit Swagger Docs: 👉 http://127.0.0.1:8000/docs
-
-🔑 API Endpoints (Summary)
-Auth
-
-POST /auth/login → Login & get JWT
-
-GET /auth/me → Get current user
-
-Tourists
-
-POST /tourist/register → Register new tourist
-
-GET /tourist/{id} → Get tourist profile
-
-PUT /tourist/{id} → Update tourist
-
-DELETE /tourist/{id} → Delete tourist
-
-GET /tourist/ → List tourists (pagination)
-
-Incidents
-
-POST /incident/report → Report incident
-
-GET /incident/{tourist_id} → Get incidents for tourist
-
-PUT /incident/{incident_id}/status → Update incident status
-
-System
-
-GET /health → Health check
-
-GET / → API root info
-
-🧪 Running Tests
-
-Tests use pytest:
-
-pytest
-
-🛠️ Deployment Notes
-
-Use PostgreSQL in production, SQLite is only for dev/demo.
-
-Add Alembic migrations for schema changes:
-
-alembic init migrations
-
-
-Configure Gunicorn/Uvicorn workers for scaling.
-
-Add reverse proxy (Nginx/Traefik) for deployment.
-
-📌 Roadmap
-
- AI-based anomaly detection (location drop, inactivity)
-
- Blockchain for tamper-proof tourist IDs
-
- Geo-fencing alerts integration
-
- IoT wearable device integration
-
- Multilingual support in APIs
+# Saarthi Backend - Smart Tourist Safety System
+
+A FastAPI-based backend for the Saarthi tourist safety application.
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.8+
+- PostgreSQL database
+- pip (Python package manager)
+
+### Installation
+
+1. **Clone and navigate to the backend directory**
+   ```bash
+   cd TOURIST-GUIDE-BACKEND
+   ```
+
+2. **Set up environment variables**
+   ```bash
+   # Create a .env file or set environment variables
+   export DATABASE_URL="postgresql://username:password@localhost:5432/saarthi_db"
+   ```
+
+3. **Run the setup script**
+   ```bash
+   python setup.py
+   ```
+
+4. **Start the server**
+   ```bash
+   python setup.py start
+   # OR
+   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+   ```
+
+### API Documentation
+
+Once the server is running, visit:
+- **API Docs**: http://127.0.0.1:8000/docs
+- **Health Check**: http://127.0.0.1:8000/health
+
+## 📊 Database Schema
+
+### Tables
+- `users` - Base user authentication
+- `tourist_profiles` - Tourist-specific information
+- `authority_profiles` - Authority/police profiles
+- `incidents` - Reported incidents
+- `alerts` - Alerts sent to tourists
+
+## 🔗 API Endpoints
+
+### Authentication (`/api/auth/`)
+- `POST /register/tourist` - Register new tourist
+- `POST /register/authority` - Register new authority
+- `POST /login` - User login
+
+### Tourist (`/api/tourist/`)
+- `GET /profile/{user_id}` - Get tourist profile
+- `POST /incidents` - Report incident
+- `GET /incidents/{tourist_id}` - Get tourist's incidents
+- `GET /alerts/{tourist_id}` - Get tourist's alerts
+- `PUT /safety-score/{tourist_id}` - Update safety score
+
+### Authority (`/api/authority/`)
+- `GET /profile/{user_id}` - Get authority profile
+- `GET /incidents` - Get all incidents
+- `GET /incidents/status/{status}` - Get incidents by status
+- `PUT /incidents/{incident_id}/status` - Update incident status
+- `PUT /incidents/{incident_id}/priority` - Update incident priority
+- `GET /alerts` - Get all alerts
+- `GET /statistics/tourists` - Get tourist statistics
+
+## 🛠️ Development
+
+### Project Structure
+```
+app/
+├── __init__.py
+├── main.py              # FastAPI app and CORS setup
+├── database.py          # Database connection
+├── models.py            # SQLAlchemy models
+├── schemas.py           # Pydantic schemas
+├── utils.py             # Utility functions
+└── routes/
+    ├── __init__.py
+    ├── auth.py          # Authentication routes
+    ├── tourist.py       # Tourist-specific routes
+    └── authority.py     # Authority-specific routes
+```
+
+### Adding New Features
+1. Add models to `models.py`
+2. Add schemas to `schemas.py`
+3. Create routes in appropriate route file
+4. Update `main.py` to include new routes
+
+## 🔧 Configuration
+
+### Environment Variables
+- `DATABASE_URL` - PostgreSQL connection string
+- `JWT_SECRET_KEY` - Secret key for JWT tokens (future use)
+- `JWT_ALGORITHM` - JWT algorithm (future use)
+
+### CORS Configuration
+The app is configured to allow CORS from:
+- http://localhost:3000
+- http://localhost:19006
+- http://127.0.0.1:19006
+- http://127.0.0.1:3000
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Database Connection Error**
+   - Ensure PostgreSQL is running
+   - Check DATABASE_URL format
+   - Verify database exists
+
+2. **Port Already in Use**
+   - Change port: `uvicorn app.main:app --reload --port 8001`
+   - Kill existing process using port 8000
+
+3. **Import Errors**
+   - Ensure you're in the correct directory
+   - Check Python path
+   - Reinstall dependencies
+
+## 📝 API Usage Examples
+
+### Register a Tourist
+```bash
+curl -X POST "http://127.0.0.1:8000/api/auth/register/tourist" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "tourist@example.com",
+    "password": "password123",
+    "full_name": "John Doe",
+    "document_type": "Passport",
+    "document_number": "A1234567",
+    "nationality": "American",
+    "trip_start": "2024-01-01",
+    "trip_end": "2024-01-15",
+    "emergency_contact_name": "Jane Doe",
+    "emergency_contact_phone": "+1234567890"
+  }'
+```
+
+### Login
+```bash
+curl -X POST "http://127.0.0.1:8000/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "tourist@example.com",
+    "password": "password123"
+  }'
+```
+
+### Report Incident
+```bash
+curl -X POST "http://127.0.0.1:8000/api/tourist/incidents?tourist_id=USER_ID" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Theft Report",
+    "description": "My wallet was stolen",
+    "category": "Theft",
+    "latitude": "40.7128",
+    "longitude": "-74.0060"
+  }'
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## 📄 License
+
+This project is part of the Smart India Hackathon 2025.

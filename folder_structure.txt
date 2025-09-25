@@ -18,4 +18,4 @@ smart-tourist-system/
 │   └── alembic/                  # optional if you want migrations
 │
 └── frontend/
-    └── ...                       # your React Native project
+    └── ...                       # our React Native project
